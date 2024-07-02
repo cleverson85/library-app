@@ -1,8 +1,11 @@
 ﻿using Application.Books.Command.Create;
 using Application.Books.Command.Delete;
 using Application.Books.Command.Update;
+using Application.Books.Queries.Filter;
 using Application.Books.Queries.GetAll;
 using Application.Books.Queries.GetById;
+using Application.Books.Query.Filter;
+using Application.Books.Query.FIlter;
 using Application.Books.Query.GetAll;
 using Application.Books.Query.GetById;
 using Asp.Versioning;
@@ -27,12 +30,22 @@ public class BookController : ApiController<BookController>
     }
 
     [MapToApiVersion("1")]
-    [HttpGet]
+    [HttpGet()]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BookResponseList>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetAll(IGetAllBooksOperation operation, CancellationToken cancellationToken)
     {
         var result = await operation.ProcessAsync(new BookRequestList(), cancellationToken);
+        return CustomResponse(result);
+    }
+
+    [MapToApiVersion("1")]
+    [HttpGet("filter")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BookResponseFilter>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetByFilter(IFilterBooksOperation operation, [FromQuery] BookFilter filter, CancellationToken cancellationToken)
+    {
+        var result = await operation.ProcessAsync(new BookRequestFilter(filter.author, filter.title, filter.registerNumber), cancellationToken);
         return CustomResponse(result);
     }
 

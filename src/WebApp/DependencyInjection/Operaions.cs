@@ -2,7 +2,9 @@
 using Application.Books.Command.Create;
 using Application.Books.Command.Delete;
 using Application.Books.Command.Update;
+using Application.Books.Queries.Filter;
 using Application.Books.Queries.GetAll;
+using Application.Books.Query.Filter;
 using Application.Books.Query.GetAll;
 using Application.Books.Query.GetById;
 using Application.Users.Command.Create;
@@ -21,6 +23,7 @@ public static class Operaions
         services.AddScoped<IGetBookByIdOperation, GetBookByIdOperation>();
         services.AddScoped<ICreateUserOperation, CreateUserOperation>();
         services.AddScoped<IDeleteUserOperation, DeleteUserOperation>();
+        services.AddScoped<IFilterBooksOperation, FilterBooksOperation>();
         services.AddScoped<IAuthenticationOperation, AuthenticationOperation>();
     }
 }

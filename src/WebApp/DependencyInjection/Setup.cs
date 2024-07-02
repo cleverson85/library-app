@@ -8,8 +8,8 @@ public static class Setup
         DbContext.Register(services);
         Repository.Register(services);
         Operaions.Register(services);
-        Versioning.Register(services);
         Swagger.Register(services);
+        Versioning.Register(services);
         Authentication.Register(services);
     }
 }
