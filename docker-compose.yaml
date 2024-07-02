@@ -1,0 +1,30 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    ports:
+      - "27017:27017"
+    networks:
+      - local-network
+
+  library:
+    build: . 
+    container_name: library
+    restart: always
+    environment:
+      ASPNETCORE_URLS: http://+
+      ASPNETCORE_ENVIRONMENT: Production
+    ports:
+      - "8080:80"
+    networks:
+      - local-network
+    depends_on:
+      - mongo
+
+networks:
+  local-network:
+    driver: bridge

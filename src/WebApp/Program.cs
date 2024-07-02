@@ -1,6 +1,7 @@
 using Asp.Versioning.ApiExplorer;
 using Serilog;
 using WebApp.DependencyInjection;
+using System.Text.Json;
 
 const string CorsPolicy = "corsPolicy";
 const string HealthPath = "/health";
@@ -11,7 +12,14 @@ builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 var services = builder.Services;
-services.AddControllers();
+services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.JsonSerializerOptions.WriteIndented = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        });
 services.AddEndpointsApiExplorer();
 services.AddHealthChecks();
 services.SetupInjection(CorsPolicy);
