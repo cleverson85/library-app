@@ -1,9 +1,9 @@
 using Asp.Versioning.ApiExplorer;
 using Serilog;
-using WebApp.DependencyInjection;
 using System.Text.Json;
+using WebApp.DependencyInjection;
+using WebApp.Middlewares;
 
-const string CorsPolicy = "corsPolicy";
 const string HealthPath = "/health";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +22,8 @@ services.AddControllers()
         });
 services.AddEndpointsApiExplorer();
 services.AddHealthChecks();
-services.SetupInjection(CorsPolicy);
+services.SetupInjection();
+services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -46,10 +47,10 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors(CorsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHealthChecks(HealthPath);
 
 app.Run();

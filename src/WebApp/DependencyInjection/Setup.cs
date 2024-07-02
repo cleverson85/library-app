@@ -2,15 +2,14 @@
 
 public static class Setup
 {
-    public static void SetupInjection(this IServiceCollection services, string corsPolicy)
+    public static void SetupInjection(this IServiceCollection services)
     {
         OptionsPattern.Register(services);
-        Cors.Register(services, corsPolicy);
         DbContext.Register(services);
         Repository.Register(services);
         Operaions.Register(services);
-        Swagger.Register(services);
         Versioning.Register(services);
+        Swagger.Register(services);
         Authentication.Register(services);
     }
 }
