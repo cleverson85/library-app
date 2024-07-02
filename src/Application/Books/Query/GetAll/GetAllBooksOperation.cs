@@ -1,0 +1,16 @@
+﻿using Application.Books.Query.GetAll;
+using Application.Core.Operation;
+using Domain.Abstraction;
+using Microsoft.Extensions.Logging;
+
+namespace Application.Books.Queries.GetAll;
+
+public sealed class GetAllBooksOperation(IUnitOfWork unitOfWork, ILogger<CoreOperationAsync<BookRequestList, BookResponseList>> logger) 
+    : CoreOperationAsync<BookRequestList, BookResponseList>(unitOfWork, logger), IGetAllBooksOperation
+{ 
+    protected override async Task<BookResponseList> ProcessOperationAsync(BookRequestList request, CancellationToken cancellationToken)
+    {
+        var books = await _unitOfWork.BookRepository.GetAllAsync();
+        return (BookResponseList)books;
+    }
+}
