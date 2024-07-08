@@ -1,0 +1,30 @@
+name: .NET Build, Test, Push Docker Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+env:
+  DOTNET_VERSION: "8.x"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+  
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore 
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Test
+      run: dotnet test --configuration Release --no-restore --no-build
