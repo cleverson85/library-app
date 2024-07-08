@@ -1,4 +1,4 @@
-name: .NET Build, Test, Push Docker Image
+name: .NET Build, Test
 
 on:
   workflow_dispatch:

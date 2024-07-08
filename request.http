@@ -19,7 +19,7 @@ content-type: application/json
 ### GET
 GET http://localhost:8080/api/v1/book HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbGV2ZXJzb24iLCJqdGkiOiI2NjgzOTQ2ZDQyMjE1ZTkwNzlmOTk3ZDMiLCJleHAiOjE3MTk5MDEzMjEsImlzcyI6ImxvY2FsIiwiYXVkIjoibG9jYWwifQ.Vl5Q1dJBcrdBGOD7PHe1nVO8jJFUuN8p3GHp82yoMzw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbGV2ZXJzb24iLCJqdGkiOiI2NjgzYTYwOWE3NjU0MDI5ZTZmYjUzNmMiLCJleHAiOjE3MTk5MDU1NTcsImlzcyI6ImxvY2FsIiwiYXVkIjoibG9jYWwifQ.3L0JRoNGoUwhCeUHOjDwsoKFIArxm57Y_ermbTjbL90
 
 ### GET BY ID
 GET http://localhost:8080/api/v1/book/6683960d530892cd91a8e83b HTTP/1.1
