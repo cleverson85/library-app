@@ -1,6 +1,6 @@
 ﻿namespace Domain.Abstraction.Repositories;
 
-public interface IBaseRepository<TEntity> where TEntity : BaseEntity, IAggregationRoot
+public interface IBaseRepository<TEntity> : IRepository where TEntity : BaseEntity, IAggregationRoot
 {
     Task<TEntity> SaveAsync(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);

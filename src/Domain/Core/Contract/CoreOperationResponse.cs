@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Application.Core.Contract;
+namespace Domain.Core.Contract;
 
 public class CoreOperationResponse : ValidationResult
 {

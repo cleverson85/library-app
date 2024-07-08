@@ -1,6 +1,5 @@
-﻿using Amazon.Runtime.Internal;
-using Application.Core.Contract;
-using Application.Core.Operation;
+﻿using Domain.Core.Contract;
+using Domain.Core.Operation;
 using Application.Extensions;
 using Application.Users.Exceptions;
 using Application.Users.Validators.Users;
@@ -8,6 +7,7 @@ using Domain.Abstraction;
 using Domain.Entities;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
+using Domain.Abstraction.Repositories;
 
 namespace Application.Users.Command.Create;
 
@@ -18,7 +18,7 @@ public sealed class CreateUserOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
     {
         request.Password = request.Password.HashPassWord();
 
-        var result = await _unitOfWork.UserRepository.SaveAsync((User)request, cancellationToken);
+        var result = await _unitOfWork.GetRepository<IUserRepository>().SaveAsync((User)request, cancellationToken);
         return (CreateUserResponse)result;
     }
 
@@ -37,7 +37,7 @@ public sealed class CreateUserOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
 
     private async Task<ValidationResult> IsUserNameAlreadyExists(string userName, CancellationToken cancellationToken)
     {
-        var user = await _unitOfWork.UserRepository.GetByUserName(userName, cancellationToken);
+        var user = await _unitOfWork.GetRepository<IUserRepository>().GetByUserName(userName, cancellationToken);
         if (user is not null)
         {
             return new UserAlreadyExistsException(userName);

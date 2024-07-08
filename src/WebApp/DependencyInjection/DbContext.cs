@@ -1,8 +1,4 @@
-﻿using Domain.Abstraction;
-using Domain.Abstraction.MongoDbContext;
-using Infrastructure;
-using Infrastructure.Contexts.MongoDb;
-using Infrastructure.Options;
+﻿using Infrastructure.Options;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -19,8 +15,5 @@ public static class DbContext
         {
             return new MongoClient(databaseOptions.ConnectionString);
         });
-
-        services.AddSingleton<IMongoDbContext, MongoDbContext>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

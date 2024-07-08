@@ -1,6 +1,7 @@
 ﻿using Application.Books.Queries.Filter;
 using Domain.Abstraction.MongoDbContext;
 using Domain.Abstraction.Repositories;
+using Domain.Core.Contract;
 using Domain.Entities;
 using MongoDB.Driver;
 
@@ -17,41 +18,33 @@ public class BookRepository : BaseRepository<Book>, IBookRepository
                                 .FirstOrDefaultAsync();
     }
 
-    public async Task<List<Book>> GetBookByFilter(string author, string title, string registerNumber, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Book>> GetBookByFilter(CoreOperationRequest requestFilter, CancellationToken cancellationToken = default)
     {
-        List<Book> result = new();
+        var request = (BookRequestFilter)requestFilter;
+        var builder = Builders<Book>.Filter;
+        var filter = builder.Empty;
 
-        if (!string.IsNullOrWhiteSpace(author) &&
-            string.IsNullOrWhiteSpace(title) &&
-            string.IsNullOrWhiteSpace(registerNumber))
+        if (!string.IsNullOrWhiteSpace(request.Author))
         {
-            result = _collection.AsQueryable()
-                                .Where(c => c.Author == author).ToList();
-        }
-        else if (!string.IsNullOrWhiteSpace(title) &&
-                  string.IsNullOrWhiteSpace(author) &&
-                  string.IsNullOrWhiteSpace(registerNumber))
-        {
-            result = _collection.AsQueryable()
-                                .Where(c => c.Title == title).ToList();
-        }
-        else if (!string.IsNullOrWhiteSpace(registerNumber) &&
-                  string.IsNullOrWhiteSpace(author) &&
-                  string.IsNullOrWhiteSpace(title))
-        {
-            result = _collection.AsQueryable()
-                                .Where(c => c.RegisterNumber == registerNumber).ToList();
-        }
-        else
-        {
-            result = _collection.AsQueryable()
-                                .Where(c => (c.Title == title) &&
-                                            (c.Author == author) &&
-                                            (c.RegisterNumber == registerNumber)).ToList();
+            filter &= builder.Eq(c => c.Author, request.Author);
         }
 
-        
+        if (!string.IsNullOrWhiteSpace(request.Title))
+        {
+            filter &= builder.Eq(c => c.Title, request.Title);
+        }
 
-        return await Task.FromResult(result);
+        if (!string.IsNullOrWhiteSpace(request.RegisterNumber))
+        {
+            filter &= builder.Eq(c => c.RegisterNumber, request.RegisterNumber);
+        }
+
+
+        if (filter == builder.Empty)
+        {
+            return Enumerable.Empty<Book>();    
+        }
+
+        return await _collection.Find(filter).ToListAsync(cancellationToken);
     }
 }

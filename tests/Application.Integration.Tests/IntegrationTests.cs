@@ -1,11 +1,12 @@
 ﻿using Application.Authentication.Command;
 using Application.Books.Command.Update;
 using Application.Books.Queries.GetById;
+using Application.Integration.Tests.Abstractions;
 using Application.IntegrationTests.Abstractions;
 using Application.Users.Command.Create;
+using Domain.Abstraction.Repositories;
 using Domain.Entities;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -22,7 +23,7 @@ public class IntegrationTests : BaseIntegrationTest
         WriteIndented = true,
     };
 
-    public IntegrationTests(WebApplicationFactory<Program> factory) : base(factory)
+    public IntegrationTests(IntegrationTestWebAppFactory factory) : base(factory)
     { }
 
     [Fact]
@@ -60,7 +61,7 @@ public class IntegrationTests : BaseIntegrationTest
         var userReponse = await HttpClient.PostAsJsonAsync($"/api/v1/user", request);
 
         //Create Book
-        var result = await UnitOfWork.BookRepository.SaveAsync(book);
+        var result = await UnitOfWork.GetRepository<IBookRepository>().SaveAsync(book);
 
         //Authenticate User
         var httpResponse = await HttpClient.PostAsJsonAsync($"/api/v1/auth", new UserRequest(request.UserName, "123456"));
@@ -89,7 +90,7 @@ public class IntegrationTests : BaseIntegrationTest
         var userReponse = await HttpClient.PostAsJsonAsync($"/api/v1/user", request);
 
         //Create Book
-        var result = await UnitOfWork.BookRepository.SaveAsync(book);
+        var result = await UnitOfWork.GetRepository<IBookRepository>().SaveAsync(book);
 
         //Update Book 
         result.Author = "Jordan Peterson";
@@ -122,7 +123,7 @@ public class IntegrationTests : BaseIntegrationTest
         var userReponse = await HttpClient.PostAsJsonAsync($"/api/v1/user", request);
 
         //Create Book
-        var result = await UnitOfWork.BookRepository.SaveAsync(book);
+        var result = await UnitOfWork.GetRepository<IBookRepository>().SaveAsync(book);
 
         //Authenticate User
         var httpResponse = await HttpClient.PostAsJsonAsync($"/api/v1/auth", new UserRequest(request.UserName, "123456"));
@@ -134,7 +135,7 @@ public class IntegrationTests : BaseIntegrationTest
 
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        Assert.Null(await UnitOfWork.BookRepository.GetByIdAsync(result.Id));
+        Assert.Null(await UnitOfWork.GetRepository<IBookRepository>().GetByIdAsync(result.Id));
     }
 
     [Fact]
@@ -153,7 +154,6 @@ public class IntegrationTests : BaseIntegrationTest
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
 
     private async Task<StringContent> SetResponseContent(HttpResponseMessage httpResponse, Book book)
     {

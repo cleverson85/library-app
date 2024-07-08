@@ -1,14 +1,14 @@
 ﻿using Application.Authentication.Command;
+using Application.Integration.Tests.Abstractions;
 using Application.IntegrationTests.Abstractions;
 using Application.Users.Command.Create;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Integration.Tests;
 
 public class AuthUnitTests : BaseIntegrationTest
 {
-    public AuthUnitTests(WebApplicationFactory<Program> factory) : base(factory)
+    public AuthUnitTests(IntegrationTestWebAppFactory factory) : base(factory)
     { }
 
     [Fact]

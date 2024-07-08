@@ -1,5 +1,5 @@
 ﻿using Application.Books.Queries.GetById;
-using Application.Core.Abstraction;
+using Domain.Core.Abstraction;
 
 namespace Application.Books.Query.GetById;
 

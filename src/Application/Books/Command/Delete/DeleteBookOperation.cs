@@ -1,18 +1,16 @@
-﻿using Application.Core.Operation;
+﻿using Domain.Core.Operation;
 using Domain.Abstraction;
-using Domain.Entities;
 using Microsoft.Extensions.Logging;
+using Domain.Abstraction.Repositories;
 
 namespace Application.Books.Command.Delete;
 
 public sealed class DeleteBookOperation(IUnitOfWork unitOfWork, ILogger<CoreOperationAsync<DeleteBookRequest, DeleteBookResponse>> logger)
     : CoreOperationAsync<DeleteBookRequest, DeleteBookResponse>(unitOfWork, logger), IDeleteBookOperation
 {
-    private Book _book;
-
     protected override async Task<DeleteBookResponse> ProcessOperationAsync(DeleteBookRequest request, CancellationToken cancellationToken)
     {
-        var result = await _unitOfWork.BookRepository.DeleteAsync(request.Id);
+        var result = await _unitOfWork.GetRepository<IBookRepository>().DeleteAsync(request.Id);
         if (result <= 0)
         {
             var response = new DeleteBookResponse();

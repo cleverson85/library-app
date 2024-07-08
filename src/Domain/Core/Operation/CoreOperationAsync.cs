@@ -1,10 +1,10 @@
-﻿using Application.Core.Abstraction;
-using Application.Core.Contract;
+﻿using Domain.Core.Contract;
 using Domain.Abstraction;
+using Domain.Core.Abstraction;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Core.Operation;
+namespace Domain.Core.Operation;
 
 public abstract class CoreOperationAsync<TRequest, TResponse> : ICoreOperationAsync<TRequest, TResponse>
     where TRequest : CoreOperationRequest

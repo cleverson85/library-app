@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Application.Core.Contract;
+namespace Domain.Core.Contract;
 
 public class CoreOperationRequest
 {

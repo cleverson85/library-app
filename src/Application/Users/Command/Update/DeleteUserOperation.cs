@@ -1,7 +1,7 @@
-﻿using Application.Core.Operation;
+﻿using Domain.Core.Operation;
 using Domain.Abstraction;
-using Domain.Entities;
 using Microsoft.Extensions.Logging;
+using Domain.Abstraction.Repositories;
 
 namespace Application.Users.Command.Update;
 
@@ -10,7 +10,7 @@ public sealed class DeleteUserOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
 {
     protected override async Task<DeleteUserResponse> ProcessOperationAsync(DeleteUserRequest request, CancellationToken cancellationToken)
     {
-        var result = await _unitOfWork.UserRepository.DeleteAsync(request.Id);
+        var result = await _unitOfWork.GetRepository<IUserRepository>().DeleteAsync(request.Id);
         if (result <= 0)
         {
             var response = new DeleteUserResponse();

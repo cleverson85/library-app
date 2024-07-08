@@ -1,15 +1,16 @@
 using Application.IntegrationTests.Abstractions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Users.Command.Create;
 using Application.Users.Command.Update;
+using Domain.Abstraction.Repositories;
+using Application.Integration.Tests.Abstractions;
 
 namespace Application.Integration.Tests;
 
 public class UserUnitTests : BaseIntegrationTest
 {
-    public UserUnitTests(WebApplicationFactory<Program> factory) : base(factory)
+    public UserUnitTests(IntegrationTestWebAppFactory factory) : base(factory)
     { }
 
     [Fact]
@@ -22,7 +23,7 @@ public class UserUnitTests : BaseIntegrationTest
         var operation = _scope.ServiceProvider.GetRequiredService<ICreateUserOperation>();
         await operation.ProcessAsync(request);
 
-        var response = await UnitOfWork.UserRepository.GetByUserName(request.UserName);
+        var response = await UnitOfWork.GetRepository<IUserRepository>().GetByUserName(request.UserName);
 
         //Assert
         Assert.NotNull(response);
@@ -82,9 +83,9 @@ public class UserUnitTests : BaseIntegrationTest
         var request = new CreateUserRequest(Faker.Internet.UserName(), "123456");
 
         //Act
-        var result = await UnitOfWork.UserRepository.SaveAsync((User)request);
-        await UnitOfWork.UserRepository.DeleteAsync(result.Id);
-        var user = await UnitOfWork.UserRepository.GetByIdAsync(result.Id);
+        var result = await UnitOfWork.GetRepository<IUserRepository>().SaveAsync((User)request);
+        await UnitOfWork.GetRepository<IUserRepository>().DeleteAsync(result.Id);
+        var user = await UnitOfWork.GetRepository<IUserRepository>().GetByIdAsync(result.Id);
 
         //Assert
         Assert.Null(user);

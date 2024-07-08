@@ -45,7 +45,7 @@ public class BookController : ApiController<BookController>
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetByFilter(IFilterBooksOperation operation, [FromQuery] BookFilter filter, CancellationToken cancellationToken)
     {
-        var result = await operation.ProcessAsync(new BookRequestFilter(filter.author, filter.title, filter.registerNumber), cancellationToken);
+        var result = await operation.ProcessAsync((BookRequestFilter)filter, cancellationToken);
         return CustomResponse(result);
     }
 

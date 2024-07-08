@@ -7,10 +7,9 @@ namespace Domain.Abstraction;
 public interface IUnitOfWork
 {
     IMongoDbContext Context { get; }
-    IClientSessionHandle Session { get; }
-    IBookRepository BookRepository { get; }
-    IUserRepository UserRepository { get; }
+    IClientSessionHandle Session { get; }    
     Task BeginTransactionAsync();
     Task CommitTransactionAsync();
     Task RollBackTransactionAsync();
+    T GetRepository<T>() where T : IRepository;
 }

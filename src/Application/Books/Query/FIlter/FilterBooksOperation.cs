@@ -1,7 +1,8 @@
 ﻿using Application.Books.Query.Filter;
-using Application.Core.Operation;
+using Domain.Core.Operation;
 using Domain.Abstraction;
 using Microsoft.Extensions.Logging;
+using Domain.Abstraction.Repositories;
 
 namespace Application.Books.Queries.Filter;
 
@@ -10,7 +11,7 @@ public sealed class FilterBooksOperation(IUnitOfWork unitOfWork, ILogger<CoreOpe
 { 
     protected override async Task<BookResponseFilter> ProcessOperationAsync(BookRequestFilter request, CancellationToken cancellationToken)
     {
-        var books = await _unitOfWork.BookRepository.GetBookByFilter(request.Author, request.Title, request.RegisterNumber);
-        return (BookResponseFilter)books;
+        var books = await _unitOfWork.GetRepository<IBookRepository>().GetBookByFilter(request);
+        return (BookResponseFilter)books.ToList();
     }
 }

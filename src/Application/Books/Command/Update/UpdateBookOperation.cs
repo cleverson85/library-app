@@ -1,7 +1,8 @@
 ﻿using Application.Books.Exceptions;
 using Application.Books.Validators.Books;
-using Application.Core.Operation;
 using Domain.Abstraction;
+using Domain.Abstraction.Repositories;
+using Domain.Core.Operation;
 using Domain.Entities;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
@@ -19,13 +20,13 @@ public sealed class UpdateBookOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
         _book.Title = request.Title;
         _book.RegisterNumber = request.RegisterNumber;
 
-        var result = await _unitOfWork.BookRepository.UpdateAsync(_book);
+        var result = await _unitOfWork.GetRepository<IBookRepository>().UpdateAsync(_book);
         return (UpdateBookResponse)result;
     }
 
     protected override async Task<ValidationResult> ValidateAsync(UpdateBookRequest request, CancellationToken cancellationToken)
     {
-        _book = await _unitOfWork.BookRepository.GetByIdAsync(request.Id);
+        _book = await _unitOfWork.GetRepository<IBookRepository>().GetByIdAsync(request.Id);
 
         if (_book is null)
         {

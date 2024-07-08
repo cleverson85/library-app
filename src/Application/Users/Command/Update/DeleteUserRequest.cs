@@ -1,4 +1,4 @@
-﻿using Application.Core.Contract;
+﻿using Domain.Core.Contract;
 using Domain.Entities;
 
 namespace Application.Users.Command.Update;

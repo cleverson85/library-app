@@ -1,11 +1,12 @@
 ﻿using Application.Books.Exceptions;
 using Application.Books.Validators.Books;
-using Application.Core.Contract;
-using Application.Core.Operation;
+using Domain.Core.Contract;
+using Domain.Core.Operation;
 using Domain.Abstraction;
 using Domain.Entities;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
+using Domain.Abstraction.Repositories;
 
 namespace Application.Books.Command.Create;
 
@@ -14,7 +15,7 @@ public sealed class CreateBookOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
 {
     protected override async Task<CreateBookResponse> ProcessOperationAsync(CreateBookRequest request, CancellationToken cancellationToken)
     {
-        var result = await _unitOfWork.BookRepository.SaveAsync((Book)request, cancellationToken);
+        var result = await _unitOfWork.GetRepository<IBookRepository>().SaveAsync((Book)request, cancellationToken);
         return (CreateBookResponse)result;
     }
 
@@ -33,7 +34,7 @@ public sealed class CreateBookOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
 
     private async Task<ValidationResult> IsRegisterNumberAlreadyExists(string registerNumber, CancellationToken cancellationToken)
     {
-        var book = await _unitOfWork.BookRepository.GetBookByRegisterNumber(registerNumber, cancellationToken);
+        var book = await _unitOfWork.GetRepository<IBookRepository>().GetBookByRegisterNumber(registerNumber, cancellationToken);
         if (book is not null)
         {
             return new BookAlreadyExistisdException(book.RegisterNumber);

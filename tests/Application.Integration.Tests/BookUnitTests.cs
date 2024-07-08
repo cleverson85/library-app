@@ -1,17 +1,18 @@
 using Application.IntegrationTests.Abstractions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Domain.Entities;
 using Application.Books.Queries.GetById;
 using Application.Books.Command.Create;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Books.Query.GetById;
 using Application.Books.Command.Delete;
+using Domain.Abstraction.Repositories;
+using Application.Integration.Tests.Abstractions;
 
 namespace Application.Integration.Tests;
 
 public class BookUnitTests : BaseIntegrationTest
 {
-    public BookUnitTests(WebApplicationFactory<Program> factory) : base(factory)
+    public BookUnitTests(IntegrationTestWebAppFactory factory) : base(factory)
     { }
 
     [Fact]
@@ -21,8 +22,8 @@ public class BookUnitTests : BaseIntegrationTest
         var request = new CreateBookRequest(Faker.Name.FullName(), Faker.Name.LastName(), "1234");
 
         //Act
-        var response = await UnitOfWork.BookRepository.SaveAsync((Book)request);
-        var book = await UnitOfWork.BookRepository.GetByIdAsync(response.Id);
+        var response = await UnitOfWork.GetRepository<IBookRepository>().SaveAsync((Book)request);
+        var book = await UnitOfWork.GetRepository<IBookRepository>().GetByIdAsync(response.Id);
 
         //Assert
         Assert.NotNull(book);
@@ -79,14 +80,14 @@ public class BookUnitTests : BaseIntegrationTest
         var request = new CreateBookRequest(Faker.Name.FullName(), Faker.Name.LastName(), "CLERRR");
 
         //Act
-        var response = await UnitOfWork.BookRepository.SaveAsync((Book)request);
+        var response = await UnitOfWork.GetRepository<IBookRepository>().SaveAsync((Book)request);
 
         response.Author = "Author Updated";
         response.Title = "Title Updated";
         response.RegisterNumber = "AAACC65";
 
-        await UnitOfWork.BookRepository.UpdateAsync(response);
-        var result = await UnitOfWork.BookRepository.GetBookByRegisterNumber(response.RegisterNumber);
+        await UnitOfWork.GetRepository<IBookRepository>().UpdateAsync(response);
+        var result = await UnitOfWork.GetRepository<IBookRepository>().GetBookByRegisterNumber(response.RegisterNumber);
 
         //Assert
         Assert.NotNull(result);
@@ -102,7 +103,7 @@ public class BookUnitTests : BaseIntegrationTest
         var request = new Book(Faker.Name.FullName(), Faker.Name.LastName(), "CLEYYY");
 
         //Act
-        var result = await UnitOfWork.BookRepository.UpdateAsync(request);
+        var result = await UnitOfWork.GetRepository<IBookRepository>().UpdateAsync(request);
 
         //Assert
         Assert.Null(result.Id);
@@ -115,9 +116,9 @@ public class BookUnitTests : BaseIntegrationTest
         var request = new Book(Faker.Name.FullName(), Faker.Name.LastName(), "CLEZZZ");
 
         //Act
-        var result = await UnitOfWork.BookRepository.SaveAsync(request);
-        await UnitOfWork.BookRepository.DeleteAsync(result.Id);
-        var book = await UnitOfWork.BookRepository.GetByIdAsync(result.Id);
+        var result = await UnitOfWork.GetRepository<IBookRepository>().SaveAsync(request);
+        await UnitOfWork.GetRepository<IBookRepository>().DeleteAsync(result.Id);
+        var book = await UnitOfWork.GetRepository<IBookRepository>().GetByIdAsync(result.Id);
 
         //Assert
         Assert.Null(book);
@@ -146,8 +147,8 @@ public class BookUnitTests : BaseIntegrationTest
         };
 
         //Act
-        createBooks.ForEach(async c => await UnitOfWork.BookRepository.SaveAsync((Book)c));
-        var result = await UnitOfWork.BookRepository.GetAllAsync();
+        createBooks.ForEach(async c => await UnitOfWork.GetRepository<IBookRepository>().SaveAsync((Book)c));
+        var result = await UnitOfWork.GetRepository<IBookRepository>().GetAllAsync();
 
         //Assert
         Assert.Contains(result, c => c.RegisterNumber == "777aaa");

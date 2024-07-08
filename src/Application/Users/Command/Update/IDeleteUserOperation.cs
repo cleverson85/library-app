@@ -1,4 +1,4 @@
-﻿using Application.Core.Abstraction;
+﻿using Domain.Core.Abstraction;
 
 namespace Application.Users.Command.Update;
 

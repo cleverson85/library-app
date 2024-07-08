@@ -1,6 +1,6 @@
 ﻿using Application.Authentication.Exceptions;
-using Application.Core.Contract;
-using Application.Core.Operation;
+using Domain.Core.Contract;
+using Domain.Core.Operation;
 using Application.Extensions;
 using Application.Options;
 using Application.Users.Exceptions;
@@ -61,7 +61,7 @@ public sealed class AuthenticationOperation(IUnitOfWork unitOfWork, ILogger<Core
 
     protected override async Task<ValidationResult> ValidateAsync(UserRequest request, CancellationToken cancellationToken)
     {
-        _user = await _unitOfWork.UserRepository.GetByUserName(request.UserName, cancellationToken);
+        _user = await _unitOfWork.GetRepository<IUserRepository>().GetByUserName(request.UserName, cancellationToken);
 
         if (_user is null)
         {
