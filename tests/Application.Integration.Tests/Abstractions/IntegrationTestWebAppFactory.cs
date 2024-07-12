@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using StackExchange.Redis;
 using Testcontainers.MongoDb;
 using Testcontainers.Redis;
 
@@ -34,12 +32,10 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 return new MongoClient(_mongoContainer.GetConnectionString());
             });
 
-            services.RemoveAll(typeof(IConnectionMultiplexer));
-            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(_redisContainer.GetConnectionString());
-            services.AddSingleton(connectionMultiplexer);
+            services.RemoveAll(typeof(RedisOptions));
             services.AddStackExchangeRedisCache(options =>
             {
-                options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
+                options.Configuration = _redisContainer.GetConnectionString();
             });
         });
     }
