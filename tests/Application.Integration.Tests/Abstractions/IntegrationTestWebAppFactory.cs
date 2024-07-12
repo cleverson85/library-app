@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using StackExchange.Redis;
 using Testcontainers.MongoDb;
 using Testcontainers.Redis;
 
@@ -21,7 +22,6 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     RedisContainer _redisContainer = new RedisBuilder()
           .WithImage("redis:7.0")
-          .WithExposedPort(6379)
           .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -34,9 +34,13 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 return new MongoClient(_mongoContainer.GetConnectionString());
             });
 
-            services.RemoveAll(typeof(IOptions<RedisOptions>));
+            services.RemoveAll(typeof(IConnectionMultiplexer));
+            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(_redisContainer.GetConnectionString());
+            services.AddSingleton(connectionMultiplexer);
             services.AddStackExchangeRedisCache(options =>
-                options.Configuration = _redisContainer.GetConnectionString());
+            {
+                options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
+            });
         });
     }
 
