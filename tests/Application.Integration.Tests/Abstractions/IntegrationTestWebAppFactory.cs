@@ -19,7 +19,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
           .Build();
 
     RedisContainer _redisContainer = new RedisBuilder()
-            .WithImage("redis:latest")
+            .WithImage("redis:7.0")
             .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
