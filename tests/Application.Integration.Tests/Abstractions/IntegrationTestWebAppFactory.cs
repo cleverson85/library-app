@@ -21,7 +21,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     RedisContainer _redisContainer = new RedisBuilder()
           .WithImage("redis:7.0")
-          .WithPortBinding(6379, 6379)
+          .WithExposedPort(6379)
           .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
