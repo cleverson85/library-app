@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Testcontainers.MongoDb;
 using Testcontainers.Redis;
@@ -19,6 +20,8 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
           .Build();
 
     RedisContainer _redisContainer = new RedisBuilder()
+          .WithImage("redis:7.0")
+          .WithPortBinding(6379, 6379)
           .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -31,8 +34,8 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 return new MongoClient(_mongoContainer.GetConnectionString());
             });
 
-            services.RemoveAll(typeof(RedisOptions));
-            services.AddStackExchangeRedisCache(options => 
+            services.RemoveAll(typeof(IOptions<RedisOptions>));
+            services.AddStackExchangeRedisCache(options =>
                 options.Configuration = _redisContainer.GetConnectionString());
         });
     }
