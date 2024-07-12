@@ -15,8 +15,9 @@ public static class Setup
 
         OptionsPattern.Register(services);
         DbContext.Register(services);
+        Cache.Register(services);
+        Authentication.Register(services);
         Swagger.Register(services);
         Versioning.Register(services);
-        Authentication.Register(services);
     }
 }

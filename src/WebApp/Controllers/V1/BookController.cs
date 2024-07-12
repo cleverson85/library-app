@@ -16,8 +16,9 @@ namespace WebApp.Controllers.V1;
 
 [Authorize]
 [ApiVersion("1")]
+[ApiVersion("2")]
 [Route("api/v{version:apiVersion}/book")]
-public class BookController : ApiController<BookController>
+public class BookController : BaseEndpoint<BookController>
 {
     [MapToApiVersion("1")]
     [HttpPost]

@@ -6,7 +6,7 @@ namespace WebApp.Controllers;
 
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/auth")]
-public class AuthController : ApiController<AuthController>
+public class AuthController : BaseEndpoint<AuthController>
 {
     [MapToApiVersion("1")]
     [HttpPost]

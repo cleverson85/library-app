@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApp.Controllers;
 
 [ApiController]
-public abstract class ApiController<T> : ControllerBase
+public abstract class BaseEndpoint<T> : ControllerBase
 {
     private readonly ICollection<string> _errors = new List<string>();
 

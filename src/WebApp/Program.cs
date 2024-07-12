@@ -21,6 +21,7 @@ services.AddControllers()
             options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
         });
 services.AddEndpointsApiExplorer();
+services.AddMvc();
 services.AddHealthChecks();
 services.SetupInjection();
 services.AddTransient<GlobalExceptionHandlingMiddleware>();
@@ -45,13 +46,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+app.MapControllers();
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseHealthChecks(HealthPath);
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.Run();
 

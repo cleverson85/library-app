@@ -8,7 +8,7 @@ namespace WebApp.Controllers.V1;
 
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/user")]
-public class UserController : ApiController<UserController>
+public class UserController : BaseEndpoint<UserController>
 {
     [HttpPost]
     [MapToApiVersion("1")]

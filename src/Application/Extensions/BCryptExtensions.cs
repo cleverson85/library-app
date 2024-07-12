@@ -2,7 +2,7 @@
 
 namespace Application.Extensions;
 
-public static class BCryptExtension
+public static class BCryptExtensions
 {
     public static bool PassWordCheck(this string requestPassword, string accountPassword) => BC.Verify(requestPassword, accountPassword);
 

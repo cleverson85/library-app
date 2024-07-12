@@ -14,12 +14,11 @@ public static class Versioning
             options.ApiVersionReader = ApiVersionReader.Combine(
                 new UrlSegmentApiVersionReader(),
                 new HeaderApiVersionReader("X-Api-Version"));
-
-        }).AddMvc()
-          .AddApiExplorer(options =>
-          {
-              options.GroupNameFormat = "'v'V";
-              options.SubstituteApiVersionInUrl = true;
-          });
+        })
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'V";
+            options.SubstituteApiVersionInUrl = true;
+        });
     }
 }
