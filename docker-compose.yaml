@@ -33,6 +33,7 @@ services:
       - local-network
     depends_on:
       - mongo
+      - redis
 
 networks:
   local-network:
