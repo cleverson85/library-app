@@ -1,7 +1,6 @@
 ﻿using Application.Integration.Tests.Abstractions;
 using Bogus;
 using Domain.Abstraction;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.IntegrationTests.Abstractions;
