@@ -8,13 +8,12 @@ public static class Cache
 {
     public static void Register(IServiceCollection services)
     {
-        var redisConnection = services.BuildServiceProvider().GetService<IOptions<RedisOptions>>()!.Value;
-        IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnection.ConnectionString);
-        services.AddSingleton(connectionMultiplexer);
-
-        services.AddStackExchangeRedisCache(options =>
+        var redisOptions = services.BuildServiceProvider().GetService<IOptions<RedisOptions>>()!.Value;
+        services.AddSingleton<IConnectionMultiplexer>(options => ConnectionMultiplexer.Connect(new ConfigurationOptions
         {
-            options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
-        });
+            EndPoints = { redisOptions.ConnectionString },
+            AbortOnConnectFail = false,
+            Ssl = redisOptions.Ssl
+        }));
     }
 }

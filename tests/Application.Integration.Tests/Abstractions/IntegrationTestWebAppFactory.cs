@@ -20,9 +20,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
           .Build();
 
     RedisContainer _redisContainer = new RedisBuilder()
-          .WithImage("redis:7.0")
-          .WithExposedPort(6379)
-          .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(6379))
+          .WithImage("redis")
           .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
