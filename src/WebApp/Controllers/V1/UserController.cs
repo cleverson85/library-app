@@ -17,7 +17,7 @@ public class UserController : BaseEndpoint<UserController>
     public async Task<IActionResult> Create(ICreateUserOperation operation, [FromBody] CreateUserRequest request, CancellationToken cancellationToken)
     {
         var result = await operation.ProcessAsync(request, cancellationToken);
-        return CustomResponse(result);
+        return CustomResponse(result?.User?.Id);
     }
 
     [Authorize]

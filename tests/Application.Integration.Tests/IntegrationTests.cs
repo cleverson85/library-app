@@ -74,7 +74,7 @@ public class IntegrationTests : BaseIntegrationTest
 
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        Assert.Equal("Lord Of the Rings", bookResult.Book?.Title);
+        Assert.Equal("Lord Of the Rings", bookResult?.Book?.Title);
     }
 
     [Fact]
@@ -107,8 +107,8 @@ public class IntegrationTests : BaseIntegrationTest
 
         //Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        Assert.Equal("Seven Live Rules", bookResult.Book?.Title);
-        Assert.Equal(regiterNUmber, bookResult.Book?.RegisterNumber);
+        Assert.Equal("Seven Live Rules", bookResult?.Book?.Title);
+        Assert.Equal(regiterNUmber, bookResult?.Book?.RegisterNumber);
     }
 
     [Fact]

@@ -1,4 +1,5 @@
-﻿using Infrastructure.Contexts.MongoDb;
+﻿using DotNet.Testcontainers.Builders;
+using Infrastructure.Contexts.MongoDb;
 using Infrastructure.Options;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -20,6 +21,8 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     RedisContainer _redisContainer = new RedisBuilder()
           .WithImage("redis:7.0")
+          .WithExposedPort(6379)
+          .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(6379))
           .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

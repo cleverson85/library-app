@@ -7,15 +7,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3334AC83-3CC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{137B071A-8140-414C-A053-10EE2872A645}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Integration.Tests", "tests\Application.Integration.Tests\Application.Integration.Tests.csproj", "{2528829C-8CED-408F-B594-3E881EFD32D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Integration.Tests", "tests\Application.Integration.Tests\Application.Integration.Tests.csproj", "{2528829C-8CED-408F-B594-3E881EFD32D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{9ECA3FCD-DE39-4C39-A4FF-662746D7D4B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{9ECA3FCD-DE39-4C39-A4FF-662746D7D4B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{BCEA92E1-9D79-481A-AEA8-68362B138205}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{BCEA92E1-9D79-481A-AEA8-68362B138205}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{1B4A5026-B6C5-44A8-BB9C-044B74F392A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{1B4A5026-B6C5-44A8-BB9C-044B74F392A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "src\WebApp\WebApp.csproj", "{5B45B9B5-7354-4A50-B8A2-73044AEEE160}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "src\WebApp\WebApp.csproj", "{5B45B9B5-7354-4A50-B8A2-73044AEEE160}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
