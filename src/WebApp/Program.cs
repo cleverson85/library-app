@@ -1,9 +1,10 @@
-using Asp.Versioning.ApiExplorer;
+using Asp.Versioning;
+using Asp.Versioning.Builder;
 using Serilog;
-using System.Text.Json;
-using WebApp.DependencyInjection;
+using WebApp;
 using WebApp.Middlewares;
 
+const string CorsPolicy = "AllowOrigin";
 const string HealthPath = "/health";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,45 +13,35 @@ builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 
 var services = builder.Services;
-services.AddControllers()
-        .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-            options.JsonSerializerOptions.WriteIndented = true;
-            options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
-            options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-        });
+
 services.AddEndpointsApiExplorer();
-services.AddMvc();
+services.AddSwaggerGen();
+services.Setup(typeof(Program).Assembly);
 services.AddHealthChecks();
-services.SetupInjection();
 services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
+
+ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+    .HasApiVersion(new ApiVersion(1))
+    .ReportApiVersions()
+    .Build();
+
+RouteGroupBuilder versionedGroup = app
+    .MapGroup("api/v{version:apiVersion}")
+    .WithApiVersionSet(apiVersionSet);
+
+app.MapEndpoints(versionedGroup);
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
-
-        foreach (ApiVersionDescription description in descriptions)
-        {
-            string url = $"/swagger/{description.GroupName}/swagger.json";
-            string name = description.GroupName.ToUpperInvariant();
-            options.SwaggerEndpoint(url, name);
-        }
-        options.RoutePrefix = string.Empty;
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseSerilogRequestLogging();
+app.UseCors(CorsPolicy);
 app.UseHttpsRedirection();
-app.MapControllers();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
 app.UseHealthChecks(HealthPath);
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 

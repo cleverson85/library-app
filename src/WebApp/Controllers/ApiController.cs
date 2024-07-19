@@ -1,48 +1,48 @@
-﻿using FluentValidation.Results;
-using Microsoft.AspNetCore.Mvc;
+﻿//using FluentValidation.Results;
+//using Microsoft.AspNetCore.Mvc;
 
-namespace WebApp.Controllers;
+//namespace WebApp.Controllers;
 
-[ApiController]
-public abstract class BaseEndpoint<T> : ControllerBase
-{
-    private readonly ICollection<string> _errors = new List<string>();
+//[ApiController]
+//public abstract class BaseEndpoint<T> : ControllerBase
+//{
+//    private readonly ICollection<string> _errors = new List<string>();
 
-    protected ActionResult CustomResponse(object? result = null)
-    {
-        if (IsOperationValid())
-        {
-            return Ok(result);
-        }
+//    protected ActionResult CustomResponse(object? result = null)
+//    {
+//        if (IsOperationValid())
+//        {
+//            return Ok(result);
+//        }
 
-        return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
-        {
-            { "Messages", _errors.ToArray() }
-        }));
-    }
+//        return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
+//        {
+//            { "Messages", _errors.ToArray() }
+//        }));
+//    }
 
-    protected ActionResult CustomResponse(ValidationResult validationResult)
-    {
-        foreach (var error in validationResult.Errors)
-        {
-            AddError(error.ErrorMessage);
-        }
+//    protected ActionResult CustomResponse(ValidationResult validationResult)
+//    {
+//        foreach (var error in validationResult.Errors)
+//        {
+//            AddError(error.ErrorMessage);
+//        }
 
-        return CustomResponse(result: validationResult);
-    }
+//        return CustomResponse(result: validationResult);
+//    }
 
-    protected bool IsOperationValid()
-    {
-        return !_errors.Any();
-    }
+//    protected bool IsOperationValid()
+//    {
+//        return !_errors.Any();
+//    }
 
-    protected void AddError(string erro)
-    {
-        _errors.Add(erro);
-    }
+//    protected void AddError(string erro)
+//    {
+//        _errors.Add(erro);
+//    }
 
-    protected void ClearErrors()
-    {
-        _errors.Clear();
-    }
-}
+//    protected void ClearErrors()
+//    {
+//        _errors.Clear();
+//    }
+//}
