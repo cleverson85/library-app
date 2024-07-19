@@ -21,6 +21,7 @@ public static class DependencyInjection
 {
     public static void Setup(this IServiceCollection services, Assembly assembly)
     {
+        ConfigureOptions(services);
         ConfigureCors(services);
         AddVersioningApi(services);
         AddRedis(services);
@@ -29,11 +30,17 @@ public static class DependencyInjection
         AddEndpoints(services, assembly);
     }
 
-
-    public static void AddJwtAuthentication(IServiceCollection services)
+    private static void ConfigureOptions(IServiceCollection services)
     {
+        services.ConfigureOptions<DbOptionsSetup>();
         services.ConfigureOptions<JwtOptionsSetup>();
+        services.ConfigureOptions<RedisOptionsSetup>();
+        services.ConfigureOptions<ConfigureSwaggerGenOptions>();
+    }
 
+
+    private static void AddJwtAuthentication(IServiceCollection services)
+    {
         var jwtOptions = services.BuildServiceProvider()
                                       .GetService<IOptions<JwtOptions>>()!.Value;
 
@@ -61,7 +68,7 @@ public static class DependencyInjection
         services.AddAuthorization();
     }
 
-    public static void ConfigureCors(IServiceCollection services)
+    private static void ConfigureCors(IServiceCollection services)
     {
         services.AddCors(options =>
         {
@@ -75,10 +82,8 @@ public static class DependencyInjection
         });
     }
 
-    public static void AddGenSwagger(IServiceCollection services)
+    private static void AddGenSwagger(IServiceCollection services)
     {
-        services.ConfigureOptions<ConfigureSwaggerGenOptions>();
-
         services.AddSwaggerGen(options =>
         {
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -107,7 +112,7 @@ public static class DependencyInjection
         });
     }
 
-    public static void AddVersioningApi(IServiceCollection services)
+    private static void AddVersioningApi(IServiceCollection services)
     {
         services.AddApiVersioning(options =>
         {
@@ -125,10 +130,8 @@ public static class DependencyInjection
         });
     }
 
-    public static void AddRedis(IServiceCollection services)
+    private static void AddRedis(IServiceCollection services)
     {
-        services.ConfigureOptions<RedisOptionsSetup>();
-
         var redisOptions = services.BuildServiceProvider().GetService<IOptions<RedisOptions>>()!.Value;
         services.AddSingleton<IConnectionMultiplexer>(options => ConnectionMultiplexer.Connect(new ConfigurationOptions
         {
@@ -138,10 +141,8 @@ public static class DependencyInjection
         }));
     }
 
-    public static void AddDbContext(IServiceCollection services)
+    private static void AddDbContext(IServiceCollection services)
     {
-        services.ConfigureOptions<DbOptionsSetup>();
-
         var databaseOptions = services.BuildServiceProvider()
                                       .GetService<IOptions<DbOptions>>()!.Value;
 
@@ -151,7 +152,7 @@ public static class DependencyInjection
         });
     }
 
-    public static void AddServices(IServiceCollection services)
+    private static void AddServices(IServiceCollection services)
     {
         services.Scan(selector => selector
                 .FromAssemblies(Application.AssemblyReference.Assembly, Domain.AssemblyReference.Assembly, Infrastructure.AssemblyReference.Assembly)
@@ -161,7 +162,7 @@ public static class DependencyInjection
                 .WithScopedLifetime());
     }
 
-    public static void AddEndpoints(IServiceCollection services, Assembly assembly)
+    private static void AddEndpoints(IServiceCollection services, Assembly assembly)
     {
         ServiceDescriptor[] serviceDescriptors = assembly
             .DefinedTypes
