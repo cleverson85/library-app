@@ -1,7 +1,7 @@
 ﻿using Domain.Core.Contract;
 using Domain.Entities;
 
-namespace Application.Users.Command.Update;
+namespace Application.Users.Command.Delete;
 
 public sealed class DeleteUserRequest(string Id) : CoreOperationRequest
 {

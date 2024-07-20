@@ -6,38 +6,28 @@ namespace WebApp.Abstractions;
 
 public abstract class BaseEndpoint<T> where T : IEndpoint
 {
-    private readonly ICollection<string> _errors = new List<string>();
-
-    protected IResult CustomResponse(object? result = null)
+    protected IResult CustomResponse(ValidationResult result)
     {
-        if (IsOperationValid())
+        if (IsOperationValid(result))
         {
-            return Results.Ok(result);
+            TypedResults.Ok(result);
         }
 
-        return Results.BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
+        return TypedResults.BadRequest<ValidationProblemDetails>(new ValidationProblemDetails(new Dictionary<string, string[]>
         {
-            { "Messages", _errors.ToArray() }
+            { "Messages", GetErrorMessages(result) }
         }));
     }
 
-    protected IResult CustomResponse(ValidationResult validationResult)
+    private static string[] GetErrorMessages(ValidationResult result)
     {
-        foreach (var error in validationResult.Errors)
-        {
-            AddError(error.ErrorMessage);
-        }
-
-        return CustomResponse(result: validationResult);
+        return result.Errors
+                     .Select(c => c.ErrorMessage)
+                     .ToArray();
     }
 
-    protected bool IsOperationValid()
+    private static bool IsOperationValid(ValidationResult result)
     {
-        return !_errors.Any();
-    }
-
-    protected void AddError(string erro)
-    {
-        _errors.Add(erro);
+        return !result.Errors.Any();
     }
 }

@@ -2,7 +2,7 @@ using Application.IntegrationTests.Abstractions;
 using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Application.Users.Command.Create;
-using Application.Users.Command.Update;
+using Application.Users.Command.Delete;
 using Domain.Abstraction.Repositories;
 using Application.Integration.Tests.Abstractions;
 

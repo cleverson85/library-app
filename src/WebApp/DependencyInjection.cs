@@ -3,7 +3,6 @@ using Asp.Versioning;
 using Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -19,15 +18,17 @@ namespace WebApp;
 
 public static class DependencyInjection
 {
-    public static void Setup(this IServiceCollection services, Assembly assembly)
+    public static void Setup(this IServiceCollection services, Assembly assembly, string corsPolicy)
     {
         ConfigureOptions(services);
-        ConfigureCors(services);
+        ConfigureCors(services, corsPolicy);
+        AddGenSwagger(services);
         AddVersioningApi(services);
         AddRedis(services);
         AddDbContext(services);
         AddServices(services);
         AddEndpoints(services, assembly);
+        AddJwtAuthentication(services);
     }
 
     private static void ConfigureOptions(IServiceCollection services)
@@ -68,11 +69,11 @@ public static class DependencyInjection
         services.AddAuthorization();
     }
 
-    private static void ConfigureCors(IServiceCollection services)
+    private static void ConfigureCors(IServiceCollection services, string corsPolicy)
     {
         services.AddCors(options =>
         {
-            options.AddPolicy(name: "AllowOrigin",
+            options.AddPolicy(name: corsPolicy,
                 builder =>
                 {
                     builder.AllowAnyOrigin()

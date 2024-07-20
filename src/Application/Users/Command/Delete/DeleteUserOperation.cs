@@ -3,7 +3,7 @@ using Domain.Abstraction;
 using Microsoft.Extensions.Logging;
 using Domain.Abstraction.Repositories;
 
-namespace Application.Users.Command.Update;
+namespace Application.Users.Command.Delete;
 
 public sealed class DeleteUserOperation(IUnitOfWork unitOfWork, ILogger<CoreOperationAsync<DeleteUserRequest, DeleteUserResponse>> logger)
     : CoreOperationAsync<DeleteUserRequest, DeleteUserResponse>(unitOfWork, logger), IDeleteUserOperation

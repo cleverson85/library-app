@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Builder;
 using Serilog;
 using WebApp;
@@ -15,8 +16,8 @@ builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Confi
 var services = builder.Services;
 
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
-services.Setup(typeof(Program).Assembly);
+services.AddMvc();
+services.Setup(typeof(Program).Assembly, CorsPolicy);
 services.AddHealthChecks();
 services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
@@ -24,6 +25,7 @@ WebApplication app = builder.Build();
 
 ApiVersionSet apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))
+    .HasApiVersion(new ApiVersion(2))
     .ReportApiVersions()
     .Build();
 
@@ -36,12 +38,24 @@ app.MapEndpoints(versionedGroup);
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+
+        foreach (ApiVersionDescription description in descriptions)
+        {
+            string url = $"/swagger/{description.GroupName}/swagger.json";
+            string name = description.GroupName.ToUpperInvariant();
+            options.SwaggerEndpoint(url, name);
+        }
+    });
 }
 
+app.UseHttpsRedirection();
 app.UseSerilogRequestLogging();
 app.UseCors(CorsPolicy);
-app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHealthChecks(HealthPath);
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
