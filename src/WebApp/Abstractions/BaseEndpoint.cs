@@ -10,7 +10,7 @@ public abstract class BaseEndpoint<T> where T : IEndpoint
     {
         if (IsOperationValid(result))
         {
-            TypedResults.Ok(result);
+            return TypedResults.Ok(result);
         }
 
         return TypedResults.BadRequest<ValidationProblemDetails>(new ValidationProblemDetails(new Dictionary<string, string[]>

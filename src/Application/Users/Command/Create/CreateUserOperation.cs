@@ -19,8 +19,9 @@ public sealed class CreateUserOperation(IUnitOfWork unitOfWork, ILogger<CoreOper
         request.Password = request.Password.HashPassWord();
 
         var result = await _unitOfWork.GetRepository<IUserRepository>().SaveAsync((User)request, cancellationToken);
+        result.Password = string.Empty;
 
-        return (CreateUserResponse)new User(result.Id);
+        return (CreateUserResponse)result;
     }
 
     protected override async Task<ValidationResult> ValidateAsync(CreateUserRequest request, CancellationToken cancellationToken)

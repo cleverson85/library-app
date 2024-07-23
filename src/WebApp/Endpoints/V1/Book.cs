@@ -51,7 +51,7 @@ public class Book : BaseEndpoint<Book>, IEndpoint
         .WithTags(EndpointSchema.BookTag)
         .MapToApiVersion(1);
 
-        app.MapDelete("book", async (IDeleteBookOperation operation, string id, CancellationToken cancellationToken) =>
+        app.MapDelete("book/{id}", async (IDeleteBookOperation operation, string id, CancellationToken cancellationToken) =>
         {
             var result = await operation.ProcessAsync(new DeleteBookRequest(id), cancellationToken);
             return CustomResponse(result);

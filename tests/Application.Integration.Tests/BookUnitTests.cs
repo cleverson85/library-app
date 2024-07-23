@@ -7,6 +7,7 @@ using Application.Books.Query.GetById;
 using Application.Books.Command.Delete;
 using Domain.Abstraction.Repositories;
 using Application.Integration.Tests.Abstractions;
+using Application.Books.Command.Update;
 
 namespace Application.Integration.Tests;
 
@@ -100,13 +101,14 @@ public class BookUnitTests : BaseIntegrationTest
     public async Task Update_BookNotExists_ShouldReturnIdEqualNull()
     {
         //Arrange
-        var request = new Book(Faker.Name.FullName(), Faker.Name.LastName(), "CLEYYY");
+        var request = new UpdateBookRequest("6683427f7f74fad7d777179b", Faker.Name.FullName(), Faker.Name.LastName(), "CLEYYY");
 
         //Act
-        var result = await UnitOfWork.GetRepository<IBookRepository>().UpdateAsync(request);
+        var operation = _scope.ServiceProvider.GetRequiredService<IUpdateBookOperation>();
+        var result = await operation.ProcessAsync(request);
 
         //Assert
-        Assert.Null(result.Id);
+        Assert.True(result.Errors.Exists(c => c.PropertyName == "Book.NotFound"));
     }
 
     [Fact]
