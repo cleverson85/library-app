@@ -18,6 +18,7 @@ var services = builder.Services;
 services.AddEndpointsApiExplorer();
 services.AddMvc();
 services.Setup(typeof(Program).Assembly, CorsPolicy);
+services.AddAuthorization();
 services.AddHealthChecks();
 services.AddTransient<GlobalExceptionHandlingMiddleware>();
 

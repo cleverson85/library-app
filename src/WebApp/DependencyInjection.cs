@@ -65,8 +65,6 @@ public static class DependencyInjection
                 ClockSkew = TimeSpan.Zero
             };
         });
-
-        services.AddAuthorization();
     }
 
     private static void ConfigureCors(IServiceCollection services, string corsPolicy)
