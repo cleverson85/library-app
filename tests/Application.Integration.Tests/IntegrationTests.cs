@@ -20,6 +20,7 @@ public class IntegrationTests : BaseIntegrationTest
     JsonSerializerOptions jsonOptions = new JsonSerializerOptions
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNameCaseInsensitive = true,
         WriteIndented = true,
     };
 

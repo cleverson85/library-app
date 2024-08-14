@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Builder;
+using KafkaFlow;
 using Serilog;
 using WebApp;
 using WebApp.Middlewares;
@@ -23,6 +24,9 @@ services.AddHealthChecks();
 services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 WebApplication app = builder.Build();
+
+var bus = app.Services.CreateKafkaBus();
+await bus.StartAsync();
 
 ApiVersionSet apiVersionSet = app.NewApiVersionSet()
     .HasApiVersion(new ApiVersion(1))

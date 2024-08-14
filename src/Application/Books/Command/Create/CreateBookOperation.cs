@@ -7,6 +7,7 @@ using Domain.Entities;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Domain.Abstraction.Repositories;
+using KafkaFlow.Producers;
 
 namespace Application.Books.Command.Create;
 

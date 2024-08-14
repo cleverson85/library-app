@@ -1,9 +1,9 @@
 ### CAD USER
-POST http://localhost:8080/api/v1/user HTTP/1.1
+POST http://localhost:5195/api/v1/user HTTP/1.1
 content-type: application/json
 
 {
-    "username": "cleverson",
+    "username": "cleverson456",
     "password": "123456"
 }
 

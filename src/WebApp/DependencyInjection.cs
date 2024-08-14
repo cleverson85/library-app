@@ -1,5 +1,6 @@
 ﻿using Application.Options;
 using Asp.Versioning;
+using Infrastructure.Kafka;
 using Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -29,6 +30,7 @@ public static class DependencyInjection
         AddServices(services);
         AddEndpoints(services, assembly);
         AddJwtAuthentication(services);
+        services.AddKafka();
     }
 
     private static void ConfigureOptions(IServiceCollection services)
