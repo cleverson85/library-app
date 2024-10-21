@@ -35,7 +35,7 @@ public abstract class BaseRepository<TEntity> : IBaseRepository<TEntity> where T
 
     public async Task<TEntity> SaveAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        await _collection.InsertOneAsync(entity);
+        await _collection.InsertOneAsync(entity, null, cancellationToken);
         return entity;
     }
 

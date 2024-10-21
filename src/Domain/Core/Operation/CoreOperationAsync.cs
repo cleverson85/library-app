@@ -20,7 +20,6 @@ public abstract class CoreOperationAsync<TRequest, TResponse> : ICoreOperationAs
         _logger = logger;
     }
 
-
     public async Task<TResponse> ProcessAsync(TRequest request, CancellationToken cancellationToken = default)
     {
         TResponse response = new TResponse();
